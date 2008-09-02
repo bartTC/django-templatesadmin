@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from stat import ST_MTIME, ST_CTIME, S_IWRITE
 from base64 import urlsafe_b64decode
+import codecs
 
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
@@ -52,7 +53,7 @@ def overview(request, template_name='templatesadmin/overview.html'):
 def edit(request, path, template_name='templatesadmin/edit.html'):
 
     template_path = urlsafe_b64decode(str(path))
-    template_file = open(template_path).read()    
+    template_file = codecs.open(template_path, 'r', 'utf-8').read()    
     short_path = template_path.rsplit('/')[-1]
     
     templatedirs = [d for d in list(settings.TEMPLATE_DIRS) + \
@@ -68,7 +69,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
             # Backup File before saving
             if backup:
                 try:
-                    f = open('%s.backup' % template_path, 'w')
+                    f = codecs.open('%s.backup' % template_path, 'w', 'utf-8')
                     f.write(template_file)
                     f.close()
                 except IOError, e:
@@ -79,7 +80,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
             
             # Save the template
             try:
-                f = open(template_path, 'w')
+                f = codecs.open(template_path, 'w', 'utf-8')
                 f.write(content)
                 f.close()
             except IOError, e:
