@@ -1,0 +1,36 @@
+{% extends "templatesadmin/base.html" %}
+
+{% load templatesadmin_tags %}
+{% load i18n %}
+
+{% block breadcumbs %}<a href="{% url templatesadmin-overview %}">{% trans "Home" %}</a> &rsaquo; {% trans "File selection" %}{% endblock %}
+{% block main %}
+	{% for template in template_dict %}
+		{% ifchanged template.rootpath %}
+		{% if not forloop.first %}
+            </tbody>
+        </table>
+        </div>
+		{% endif %}
+        <div class="module">
+        <h2>{{ template.rootpath }}</h2>		
+        <table cellspacing="0" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>{% trans "File" %}</th>
+                    <th class="r">{% trans "Modified" %}</th>        
+                </tr>
+            </thead>
+            <tbody>
+		{% endifchanged %}
+                <tr class="{% cycle row1,row2 %}">
+                    <td style="width: 99%;">
+						{% if not template.writeable %}{% trans "(read only)" %} {% endif %}
+						<a href="{% url templatesadmin-edit template.abspath|base64urlencode %}">{{ template.abspath }}</a></td>
+                    <td style="white-space: nowrap;" class="r">{{ template.modified|date:_("DATETIME_FORMAT") }}</td>
+                </tr>
+	{% endfor %}
+            </tbody>
+        </table>
+        </div>
+{% endblock %}
