@@ -55,8 +55,8 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
     template_file = open(template_path).read()    
     short_path = template_path.rsplit('/')[-1]
     
-    templatedirs = [d for d in settings.TEMPLATE_DIRS + \
-                    app_template_dirs if os.path.isdir(d)]
+    templatedirs = [d for d in list(settings.TEMPLATE_DIRS) + \
+                    list(app_template_dirs) if os.path.isdir(d)]
     
     # TODO: Check if file is within template-dirs and writeable
     if request.method == 'POST':
