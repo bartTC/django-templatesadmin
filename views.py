@@ -20,8 +20,8 @@ TEMPLATEADMIN_VALID_FILE_EXTENSIONS = getattr(
 
 def overview(request, template_name='templatesadmin/overview.html'):
     
-    templatedirs = [d for d in settings.TEMPLATE_DIRS + \
-                    app_template_dirs if os.path.isdir(d)]
+    templatedirs = [d for d in list(settings.TEMPLATE_DIRS) + \
+                    list(app_template_dirs) if os.path.isdir(d)]
     
     template_dict = []
     for templatedir in templatedirs:
