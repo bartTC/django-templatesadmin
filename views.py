@@ -100,7 +100,12 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
     template_path = str(path)
     short_path = template_path.rsplit('/')[-1]
 
-    # TODO: Check if file is within template-dirs and writeable
+    # Check if file is within template-dirs
+    if not any([path.startswith(templatedir) for templatedir in TEMPLATESADMIN_TEMPLATE_DIRS]):
+        request.user.message_set.create(message=_('Sorry, that file is not available for editing'))
+        return HttpResponseRedirect(reverse('templatesadmin-overview'))
+
+    # TODO: check if file is writeable
 
     if request.method == 'POST':
         form = TEMPLATESADMIN_EDIT_HOOK.generate_form(request.POST)
