@@ -36,6 +36,8 @@ TEMPLATESADMIN_EDIT_HOOK = getattr(
     DotBackupFilesHook()
 )
 
+_fixpath = lambda path: os.path.abspath(os.path.normpath(path))
+
 TEMPLATESADMIN_TEMPLATE_DIRS = getattr(
     settings,
     'TEMPLATESADMIN_TEMPLATE_DIRS', [
@@ -43,6 +45,8 @@ TEMPLATESADMIN_TEMPLATE_DIRS = getattr(
         list(app_template_dirs) if os.path.isdir(d)
     ]
 )
+
+TEMPLATESADMIN_TEMPLATE_DIRS = [_fixpath(dir) for dir in TEMPLATESADMIN_TEMPLATE_DIRS]
 
 def user_in_templatesadmin_group(request):
     try:
