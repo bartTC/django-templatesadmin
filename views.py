@@ -1,25 +1,41 @@
-from django.core.urlresolvers import reverse
 import os
-from datetime import datetime
-from stat import ST_MTIME, ST_CTIME, S_IWRITE
-from base64 import urlsafe_b64decode
 import codecs
+from datetime import datetime
+from stat import ST_MTIME, ST_CTIME
+from base64 import urlsafe_b64decode
 
-from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template.loaders.app_directories import app_template_dirs
-
+from django.core.exceptions import ObjectDoesNotExist
 from templatesadmin.forms import TemplateForm
 
-TEMPLATEADMIN_VALID_FILE_EXTENSIONS = getattr(
+TEMPLATESADMIN_VALID_FILE_EXTENSIONS = getattr(
     settings,
     'TEMPLATEADMIN_VALID_FILE_EXTENSIONS', 
     ('html', 'htm', 'txt', 'css', 'backup',)
 )
 
+TEMPLATESADMIN_GROUP = getattr(
+    settings,
+    'TEMPLATEADMIN_GROUP',
+    'TemplateAdmins'
+)
+
+def user_in_templatesadmin_group(request):
+    try:
+        request.user.groups.get(name=TEMPLATESADMIN_GROUP)
+        return True
+    except ObjectDoesNotExist:
+        return False
+    
 def overview(request, template_name='templatesadmin/overview.html'):
+    
+    if not user_in_templatesadmin_group(request):
+        return HttpResponseForbidden(_(u'You are not allowed to do this.'))
     
     templatedirs = [d for d in list(settings.TEMPLATE_DIRS) + \
                     list(app_template_dirs) if os.path.isdir(d)]
@@ -28,7 +44,7 @@ def overview(request, template_name='templatesadmin/overview.html'):
     for templatedir in templatedirs:
         for root, dirs, files in os.walk(templatedir):
             for f in sorted([f for f in files if f.rsplit('.')[-1] \
-                      in TEMPLATEADMIN_VALID_FILE_EXTENSIONS]):
+                      in TEMPLATESADMIN_VALID_FILE_EXTENSIONS]):
                 full_path = os.path.join(root, f)
                 l = {
                      'rootpath': root,
@@ -50,16 +66,20 @@ def overview(request, template_name='templatesadmin/overview.html'):
 
     return render_to_response(template_name, template_context)
     
+
 def edit(request, path, template_name='templatesadmin/edit.html'):
 
+    if not user_in_templatesadmin_group(request):
+        return HttpResponseForbidden(_(u'You are not allowed to do this.'))
+    
     template_path = urlsafe_b64decode(str(path))
     template_file = codecs.open(template_path, 'r', 'utf-8').read()    
     short_path = template_path.rsplit('/')[-1]
     
+    # TODO: Check if file is within template-dirs and writeable
     templatedirs = [d for d in list(settings.TEMPLATE_DIRS) + \
                     list(app_template_dirs) if os.path.isdir(d)]
     
-    # TODO: Check if file is within template-dirs and writeable
     if request.method == 'POST':
         form = TemplateForm(request.POST)
         if form.is_valid():
