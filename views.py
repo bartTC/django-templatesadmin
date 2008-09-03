@@ -36,6 +36,14 @@ TEMPLATESADMIN_EDIT_HOOK = getattr(
     DotBackupFilesHook()
 )
 
+TEMPLATESADMIN_TEMPLATE_DIRS = getattr(
+    settings,
+    'TEMPLATESADMIN_TEMPLATE_DIRS', [
+        d for d in list(settings.TEMPLATE_DIRS) + \
+        list(app_template_dirs) if os.path.isdir(d)
+    ]
+)
+
 def user_in_templatesadmin_group(request):
     try:
         request.user.groups.get(name=TEMPLATESADMIN_GROUP)
@@ -51,9 +59,9 @@ def overview(request, template_name='templatesadmin/overview.html'):
     
     templatedirs = [d for d in list(settings.TEMPLATE_DIRS) + \
                     list(app_template_dirs) if os.path.isdir(d)]
-    
+
     template_dict = []
-    for templatedir in templatedirs:
+    for templatedir in TEMPLATESADMIN_TEMPLATE_DIRS:
         for root, dirs, files in os.walk(templatedir):
             for f in sorted([f for f in files if f.rsplit('.')[-1] \
                       in TEMPLATESADMIN_VALID_FILE_EXTENSIONS]):
@@ -87,11 +95,9 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
     
     template_path = str(path)
     short_path = template_path.rsplit('/')[-1]
-    
+
     # TODO: Check if file is within template-dirs and writeable
-    templatedirs = [d for d in list(settings.TEMPLATE_DIRS) + \
-                    list(app_template_dirs) if os.path.isdir(d)]
-    
+
     if request.method == 'POST':
         form = TEMPLATESADMIN_EDIT_HOOK.generate_form(request.POST)
         if form.is_valid():
