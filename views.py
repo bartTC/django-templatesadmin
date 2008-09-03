@@ -111,6 +111,12 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
                     message=_(u'Template \'%s\' has not been saved! Reason: %s' % (short_path, e))
                 )
                 return HttpResponseRedirect(request.build_absolute_uri())
+
+            try:
+                TEMPLATEADMIN_EDIT_HOOK.post_save(request, form, template_path)
+            except TemplatesAdminException, e:
+                request.user.message_set.create(message=e.message)
+                return HttpResponseRedirect(request.build_absolute_uri())
             
             request.user.message_set.create(
                 message=_(u'Template \'%s\' was saved successfully' % short_path)

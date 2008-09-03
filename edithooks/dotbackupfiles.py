@@ -26,6 +26,9 @@ class DotBackupFilesHook():
         except IOError, e:
             raise TemplatesAdminException(_(u'Backup Template \'%s\' has not been saved! Reason: %s' % (template_path, e)))
 
+    def post_save(cls, request, form, template_path):
+        pass
+
     @classmethod
     def generate_form(cls, *args, **kwargs):
         return TemplateFormWithBackup(*args, **kwargs)
