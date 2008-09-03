@@ -13,6 +13,8 @@ from django.template.loaders.app_directories import app_template_dirs
 from django.core.exceptions import ObjectDoesNotExist
 from templatesadmin.forms import TemplateForm
 from django.contrib.auth.decorators import login_required
+from templatesadmin.edithooks.dotbackupfiles import DotBackupFilesHook
+from templatesadmin import TemplatesAdminException
 
 TEMPLATESADMIN_VALID_FILE_EXTENSIONS = getattr(
     settings,
@@ -76,7 +78,6 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
         return HttpResponseForbidden(_(u'You are not allowed to do this.'))
     
     template_path = urlsafe_b64decode(str(path))
-    template_file = codecs.open(template_path, 'r', 'utf-8').read()    
     short_path = template_path.rsplit('/')[-1]
     
     # TODO: Check if file is within template-dirs and writeable
@@ -84,22 +85,15 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
                     list(app_template_dirs) if os.path.isdir(d)]
     
     if request.method == 'POST':
-        form = TemplateForm(request.POST)
+        form = DotBackupFilesHook.generate_form(request.POST)
         if form.is_valid():
             content = form.cleaned_data['content']
-            backup = form.cleaned_data['backup']
             
-            # Backup File before saving
-            if backup:
-                try:
-                    f = codecs.open('%s.backup' % template_path, 'w', 'utf-8')
-                    f.write(template_file)
-                    f.close()
-                except IOError, e:
-                    request.user.message_set.create(
-                        message=_(u'Backup Template \'%s\' has not been saved! Reason: %s' % (short_path, e))
-                    )
-                    return HttpResponseRedirect(request.build_absolute_uri())
+            try:
+                DotBackupFilesHook.pre_save(request, form, template_path)
+            except TemplatesAdminException, e:
+                request.user.message_set.create(message=e.message)
+                return HttpResponseRedirect(request.build_absolute_uri())
             
             # Save the template
             try:
@@ -117,7 +111,8 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
             )
             return HttpResponseRedirect(reverse('templatesadmin-overview'))
     else:
-        form = TemplateForm(
+        template_file = codecs.open(template_path, 'r', 'utf-8').read()
+        form =  DotBackupFilesHook.generate_form(
             initial={'content': template_file}
         )
     
