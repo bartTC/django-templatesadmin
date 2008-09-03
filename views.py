@@ -85,7 +85,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
     if not user_in_templatesadmin_group(request):
         return HttpResponseForbidden(_(u'You are not allowed to do this.'))
     
-    template_path = urlsafe_b64decode(str(path))
+    template_path = str(path)
     short_path = template_path.rsplit('/')[-1]
     
     # TODO: Check if file is within template-dirs and writeable
