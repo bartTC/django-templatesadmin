@@ -12,6 +12,7 @@ from django.conf import settings
 from django.template.loaders.app_directories import app_template_dirs
 from django.core.exceptions import ObjectDoesNotExist
 from templatesadmin.forms import TemplateForm
+from django.contrib.auth.decorators import login_required
 
 TEMPLATESADMIN_VALID_FILE_EXTENSIONS = getattr(
     settings,
@@ -32,6 +33,7 @@ def user_in_templatesadmin_group(request):
     except ObjectDoesNotExist:
         return False
     
+@login_required()
 def overview(request, template_name='templatesadmin/overview.html'):
     
     if not user_in_templatesadmin_group(request):
@@ -67,6 +69,7 @@ def overview(request, template_name='templatesadmin/overview.html'):
     return render_to_response(template_name, template_context)
     
 
+@login_required()
 def edit(request, path, template_name='templatesadmin/edit.html'):
 
     if not user_in_templatesadmin_group(request):
