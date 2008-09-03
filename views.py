@@ -28,6 +28,12 @@ TEMPLATESADMIN_GROUP = getattr(
     'TemplateAdmins'
 )
 
+TEMPLATESADMIN_EDIT_HOOK = getattr(
+    settings,
+    'TEMPLATESADMIN_EDIT_HOOK',
+    DotBackupFilesHook()
+)
+
 def user_in_templatesadmin_group(request):
     try:
         request.user.groups.get(name=TEMPLATESADMIN_GROUP)
@@ -85,12 +91,12 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
                     list(app_template_dirs) if os.path.isdir(d)]
     
     if request.method == 'POST':
-        form = DotBackupFilesHook.generate_form(request.POST)
+        form = TEMPLATESADMIN_EDIT_HOOK.generate_form(request.POST)
         if form.is_valid():
             content = form.cleaned_data['content']
             
             try:
-                DotBackupFilesHook.pre_save(request, form, template_path)
+                TEMPLATESADMIN_EDIT_HOOK.pre_save(request, form, template_path)
             except TemplatesAdminException, e:
                 request.user.message_set.create(message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())
@@ -112,7 +118,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
             return HttpResponseRedirect(reverse('templatesadmin-overview'))
     else:
         template_file = codecs.open(template_path, 'r', 'utf-8').read()
-        form =  DotBackupFilesHook.generate_form(
+        form =  TEMPLATESADMIN_EDIT_HOOK.generate_form(
             initial={'content': template_file}
         )
     
