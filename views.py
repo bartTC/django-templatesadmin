@@ -3,6 +3,8 @@ import codecs
 from datetime import datetime
 from stat import ST_MTIME, ST_CTIME
 from base64 import urlsafe_b64decode
+import codecs
+from re import search
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseForbidden
@@ -105,6 +107,12 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
             
             # Save the template
             try:
+                f = open(template_path, 'r')
+                if None == search("\r\n", f.read()):
+                    # Template is saved in unix-style, save in unix style.
+                    content = content.replace("\r\n", "\n")
+                f.close()
+
                 f = codecs.open(template_path, 'w', 'utf-8')
                 f.write(content)
                 f.close()
