@@ -26,6 +26,8 @@ class DotBackupFilesHook():
         except IOError, e:
             raise TemplatesAdminException(_(u'Backup Template \'%s\' has not been saved! Reason: %s' % (template_path, e)))
 
+        return "Backup \'%s.backup\' has been saved." % template_path
+
     def post_save(cls, request, form, template_path):
         pass
 

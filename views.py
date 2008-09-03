@@ -96,7 +96,9 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
             content = form.cleaned_data['content']
             
             try:
-                TEMPLATESADMIN_EDIT_HOOK.pre_save(request, form, template_path)
+                pre_save_notice = TEMPLATESADMIN_EDIT_HOOK.pre_save(request, form, template_path)
+                if pre_save_notice:
+                    request.user.message_set.create(message=pre_save_notice)
             except TemplatesAdminException, e:
                 request.user.message_set.create(message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())
@@ -113,7 +115,9 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
                 return HttpResponseRedirect(request.build_absolute_uri())
 
             try:
-                TEMPLATEADMIN_EDIT_HOOK.post_save(request, form, template_path)
+                post_save_notice = TEMPLATESADMIN_EDIT_HOOK.post_save(request, form, template_path)
+                if post_save_notice:
+                    request.user.message_set.create(message=post_save_notice)
             except TemplatesAdminException, e:
                 request.user.message_set.create(message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())

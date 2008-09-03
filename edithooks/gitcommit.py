@@ -62,6 +62,8 @@ class GitCommitHook():
             print status
             raise TemplatesAdminException("Error while executing %s: %s" % (command, stderr_value.rstrip(), ))
 
+        return stdout_value.rstrip()
+
     @classmethod
     def generate_form(cls, *args, **kwargs):
         return ChangeCommentTemplateForm(*args, **kwargs)
