@@ -1,9 +1,17 @@
 from django import forms
-from templatesadmin.forms import TemplateForm
+from django.utils.translation import ugettext_lazy
 from templatesadmin import TemplatesAdminException
+from templatesadmin.forms import TemplateForm
 
 import subprocess
 import os
+
+class ChangeCommentTemplateForm(TemplateForm):
+    backup = forms.CharField(
+        widget=forms.TextInput(attrs={'size':'100'}),
+        label = ugettext_lazy(u'Change message'),
+        required = False,
+    )
 
 class GitCommitHook():
     '''
@@ -23,13 +31,29 @@ class GitCommitHook():
         else:
             author = request.user.username
 
-        command = '''git commit %s --author "%s <%s>" -m "Template change, using templatesadmin"''' % (file, author, request.user.email)
+        message = '--'
+
+        backup = form.cleaned_data['backup']
+        if backup:
+            message = form.cleaned_data['backup']
+
+        command = '''git commit %s --author "%s <%s>" -F -''' % (file, author, request.user.email)
 
         # Stolen from gitpython's git/cmd.py
-        proc = subprocess.Popen(args=command, shell=True, cwd=dir, stderr=subprocess.PIPE)
+        proc = subprocess.Popen(
+            args=command,
+            shell=True,
+            cwd=dir,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
 
         try:
+            proc.stdin.write(message)
+            proc.stdin.close()
             stderr_value = proc.stderr.read()
+            stdout_value = proc.stdout.read()
             status = proc.wait()
         finally:
 	    proc.stderr.close()
@@ -40,4 +64,4 @@ class GitCommitHook():
 
     @classmethod
     def generate_form(cls, *args, **kwargs):
-        return TemplateForm(*args, **kwargs)
+        return ChangeCommentTemplateForm(*args, **kwargs)
