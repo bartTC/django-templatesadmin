@@ -37,7 +37,15 @@ class GitCommitHook():
         if backup:
             message = form.cleaned_data['backup']
 
-        command = '''git commit %s --author "%s <%s>" -F -''' % (file, author, request.user.email)
+        command = (
+            'GIT_COMMITTER_NAME="%(author)s" GIT_COMMITER_EMAIL="%(email)s" '
+            'GIT_AUTHOR_NAME="%(author)s" GIT_AUTHOR_EMAIL="%(email)s" '
+            'git commit -F - -- %(file)s'
+        ) % {
+          'file': file,
+          'author': author,
+          'email': request.user.email,
+        }
 
         # Stolen from gitpython's git/cmd.py
         proc = subprocess.Popen(
