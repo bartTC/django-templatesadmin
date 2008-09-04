@@ -44,6 +44,15 @@ There are some settings that you can override in your ``settings.py``:
    
    Default: ('html', 'htm', 'txt', 'css', 'backup')
 
+3. ``TEMPLATESADMIN_TEMPLATE_DIRS``: A tuple of directories you want your users
+   to edit, instead of all templates.
+
+4. ``TEMPLATESADMIN_EDIT_HOOK``: One of
+   ``templatesadmin.edithooks.dotbackupfiles.DotBackupFilesHook()```,
+   ``templatesadmin.edithooks.gitcommit.GitCommitHook()```. While the first
+   backups the template to ``.backup``, the second integrates with a git
+   repository, if the templates appear to be in one.
+
 Dependencies:
 =============
 
