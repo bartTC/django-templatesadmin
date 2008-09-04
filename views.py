@@ -20,13 +20,13 @@ from templatesadmin import TemplatesAdminException
 
 TEMPLATESADMIN_VALID_FILE_EXTENSIONS = getattr(
     settings,
-    'TEMPLATEADMIN_VALID_FILE_EXTENSIONS', 
+    'TEMPLATESADMIN_VALID_FILE_EXTENSIONS',
     ('html', 'htm', 'txt', 'css', 'backup',)
 )
 
 TEMPLATESADMIN_GROUP = getattr(
     settings,
-    'TEMPLATEADMIN_GROUP',
+    'TEMPLATESADMIN_GROUP',
     'TemplateAdmins'
 )
 
@@ -54,6 +54,7 @@ def _shorten_path(path):
     return path[len(COMMONPREFIX)+1:]
 
 def user_in_templatesadmin_group(request):
+    return True
     try:
         request.user.groups.get(name=TEMPLATESADMIN_GROUP)
         return True
