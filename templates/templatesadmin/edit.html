@@ -19,11 +19,15 @@
 	
 	<div class="submit-row">
 	{% if template_writeable %}
-		<p class="float-left">
-			{{ form.backup.label_tag }} {{ form.backup }}
-		</p>
-		<input type="submit" value="Sichern" class="default" />
-		<br clear="both"/>
+                {% for field in form %}
+                    {% ifnotequal field.label "Content" %}
+		        <p class="float-left">
+		        	{{ field.label }} {{ field }}
+		        </p>
+                        {% if forloop.last %} <input type="submit" value="{% trans "Sichern" %}" class="default" /> {% endif %}
+		        <br clear="both"/>
+                    {% endifnotequal %}
+                {% endfor %}
 	{% else %}
 		{% trans "This template is <strong>not writeable</strong>" %}
 		<br clear="both"/>

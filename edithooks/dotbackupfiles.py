@@ -1,15 +1,10 @@
 from django import forms
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import ugettext_lazy as _
 from shutil import copy
-from templatesadmin.forms import TemplateForm
 
-class TemplateFormWithBackup(TemplateForm):
-    backup = forms.BooleanField(
-        label = ugettext_lazy(u'Backup file before saving?'),
-        required = False,
-    )
+from . import TemplatesAdminHook
 
-class DotBackupFilesHook():
+class DotBackupFilesHook(TemplatesAdminHook):
     '''
     Backup File before saving
     '''
@@ -28,10 +23,10 @@ class DotBackupFilesHook():
 
         return "Backup \'%s.backup\' has been saved." % template_path
 
-    def post_save(cls, request, form, template_path):
-        pass
-
     @classmethod
-    def generate_form(cls, *args, **kwargs):
-        return TemplateFormWithBackup(*args, **kwargs)
-
+    def contribute_to_form(cls, form):
+        form.base_fields['backup'] = forms.BooleanField(
+            label = _('Backup file before saving?'),
+            required = False,
+        )
+        return form

@@ -30,11 +30,33 @@ TEMPLATESADMIN_GROUP = getattr(
     'TemplateAdmins'
 )
 
-TEMPLATESADMIN_EDIT_HOOK = getattr(
+TEMPLATESADMIN_EDITHOOKS = getattr(
     settings,
-    'TEMPLATESADMIN_EDIT_HOOK',
-    DotBackupFilesHook()
+    'TEMPLATESADMIN_EDITHOOKS',
+    ('templatesadmin.edithooks.dotbackupfiles.DotBackupFilesHook', )
 )
+
+if str == type(TEMPLATESADMIN_EDITHOOKS):
+    TEMPLATESADMIN_EDITHOOKS = (TEMPLATESADMIN_EDITHOOKS,)
+
+_hooks = []
+
+for path in TEMPLATESADMIN_EDITHOOKS:
+    # inspired by django.template.context.get_standard_processors
+    i = path.rfind('.')
+    module, attr = path[:i], path[i+1:]
+    try:
+        mod = __import__(module, {}, {}, [attr])
+    except ImportError, e:
+        raise ImproperlyConfigured('Error importing edithook module %s: "%s"' % (module, e))
+    try:
+        func = getattr(mod, attr)
+    except AttributeError:
+        raise ImproperlyConfigured('Module "%s" does not define a "%s" callable request processor' % (module, attr))
+
+    _hooks.append(func)
+
+TEMPLATESADMIN_EDITHOOKS = tuple(_hooks)
 
 _fixpath = lambda path: os.path.abspath(os.path.normpath(path))
 
@@ -113,14 +135,19 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
     # TODO: check if file is writeable
 
     if request.method == 'POST':
-        form = TEMPLATESADMIN_EDIT_HOOK.generate_form(request.POST)
+        formclass = TemplateForm
+        for hook in TEMPLATESADMIN_EDITHOOKS:
+            formclass = hook.contribute_to_form(formclass)
+
+        form = formclass(request.POST)
         if form.is_valid():
             content = form.cleaned_data['content']
             
             try:
-                pre_save_notice = TEMPLATESADMIN_EDIT_HOOK.pre_save(request, form, template_path)
-                if pre_save_notice:
-                    request.user.message_set.create(message=pre_save_notice)
+                for hook in TEMPLATESADMIN_EDITHOOKS:
+                    pre_save_notice = hook.pre_save(request, form, template_path)
+                    if pre_save_notice:
+                        request.user.message_set.create(message=pre_save_notice)
             except TemplatesAdminException, e:
                 request.user.message_set.create(message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())
@@ -143,9 +170,10 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
                 return HttpResponseRedirect(request.build_absolute_uri())
 
             try:
-                post_save_notice = TEMPLATESADMIN_EDIT_HOOK.post_save(request, form, template_path)
-                if post_save_notice:
-                    request.user.message_set.create(message=post_save_notice)
+                for hook in TEMPLATESADMIN_EDITHOOKS:
+                    post_save_notice = hook.post_save(request, form, template_path)
+                    if post_save_notice:
+                        request.user.message_set.create(message=post_save_notice)
             except TemplatesAdminException, e:
                 request.user.message_set.create(message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())
@@ -156,7 +184,12 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
             return HttpResponseRedirect(reverse('templatesadmin-overview'))
     else:
         template_file = codecs.open(template_path, 'r', 'utf-8').read()
-        form =  TEMPLATESADMIN_EDIT_HOOK.generate_form(
+
+        formclass = TemplateForm
+        for hook in TEMPLATESADMIN_EDITHOOKS:
+            formclass = hook.contribute_to_form(formclass)
+
+        form = formclass(
             initial={'content': template_file}
         )
     

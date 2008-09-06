@@ -1,26 +1,15 @@
 from django import forms
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import ugettext_lazy as _
 from templatesadmin import TemplatesAdminException
-from templatesadmin.forms import TemplateForm
+from . import TemplatesAdminHook
 
 import subprocess
 import os
 
-class ChangeCommentTemplateForm(TemplateForm):
-    backup = forms.CharField(
-        widget=forms.TextInput(attrs={'size':'100'}),
-        label = ugettext_lazy(u'Change message'),
-        required = False,
-    )
-
-class GitCommitHook():
+class GitCommitHook(TemplatesAdminHook):
     '''
-    Backup File before saving
+    Commit to git after saving
     '''
-
-    @classmethod
-    def pre_save(cls, request, form, template_path):
-        pass
 
     @classmethod
     def post_save(cls, request, form, template_path):
@@ -31,11 +20,7 @@ class GitCommitHook():
         else:
             author = request.user.username
 
-        message = '--'
-
-        backup = form.cleaned_data['backup']
-        if backup:
-            message = form.cleaned_data['backup']
+        message = form.cleaned_data['commitmessage'] or '--'
 
         command = (
             'GIT_COMMITTER_NAME="%(author)s" GIT_COMMITER_EMAIL="%(email)s" '
@@ -67,11 +52,15 @@ class GitCommitHook():
 	    proc.stderr.close()
 
         if status != 0:
-            print status
             raise TemplatesAdminException("Error while executing %s: %s" % (command, stderr_value.rstrip(), ))
 
         return stdout_value.rstrip()
 
     @classmethod
-    def generate_form(cls, *args, **kwargs):
-        return ChangeCommentTemplateForm(*args, **kwargs)
+    def contribute_to_form(cls, form):
+        form.base_fields['commitmessage'] = forms.CharField(
+            widget=forms.TextInput(attrs={'size':'100'}),
+            label = _('Change message'),
+            required = False,
+        )
+        return form
