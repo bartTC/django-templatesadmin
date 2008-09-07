@@ -57,10 +57,9 @@ class GitCommitHook(TemplatesAdminHook):
         return stdout_value.rstrip()
 
     @classmethod
-    def contribute_to_form(cls, form):
-        form.base_fields['commitmessage'] = forms.CharField(
+    def contribute_to_form(cls):
+        return dict(commitmessage=forms.CharField(
             widget=forms.TextInput(attrs={'size':'100'}),
             label = _('Change message'),
             required = False,
-        )
-        return form
+        ))

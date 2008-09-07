@@ -137,7 +137,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
     if request.method == 'POST':
         formclass = TemplateForm
         for hook in TEMPLATESADMIN_EDITHOOKS:
-            formclass = hook.contribute_to_form(formclass)
+            formclass.base_fields.update(hook.contribute_to_form())
 
         form = formclass(request.POST)
         if form.is_valid():
@@ -161,7 +161,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
                 f.close()
 
                 f = codecs.open(template_path, 'w', 'utf-8')
-                f.write(content)
+                f.write(content[:-1]) # strip \n at end of file
                 f.close()
             except IOError, e:
                 request.user.message_set.create(
@@ -187,7 +187,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
 
         formclass = TemplateForm
         for hook in TEMPLATESADMIN_EDITHOOKS:
-            formclass = hook.contribute_to_form(formclass)
+            formclass.base_fields.update(hook.contribute_to_form())
 
         form = formclass(
             initial={'content': template_file}
