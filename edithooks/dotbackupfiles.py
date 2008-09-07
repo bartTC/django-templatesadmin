@@ -1,8 +1,10 @@
-from django import forms
-from django.utils.translation import ugettext_lazy as _
 from shutil import copy
 
-from . import TemplatesAdminHook
+from django import forms
+from django.utils.translation import ugettext_lazy as _
+
+from templatesadmin.edithooks import TemplatesAdminHook
+from templatesadmin import TemplatesAdminException
 
 class DotBackupFilesHook(TemplatesAdminHook):
     '''

@@ -2,8 +2,6 @@ import os
 import codecs
 from datetime import datetime
 from stat import ST_MTIME, ST_CTIME
-from base64 import urlsafe_b64decode
-import codecs
 from re import search
 
 from django.core.urlresolvers import reverse
@@ -13,9 +11,10 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template.loaders.app_directories import app_template_dirs
 from django.core.exceptions import ObjectDoesNotExist
-from templatesadmin.forms import TemplateForm
 from django.contrib.auth.decorators import login_required
-from templatesadmin.edithooks.dotbackupfiles import DotBackupFilesHook
+from django.core.exceptions import ImproperlyConfigured
+
+from templatesadmin.forms import TemplateForm
 from templatesadmin import TemplatesAdminException
 
 TEMPLATESADMIN_VALID_FILE_EXTENSIONS = getattr(
@@ -88,9 +87,6 @@ def overview(request, template_name='templatesadmin/overview.html'):
     
     if not user_in_templatesadmin_group(request):
         return HttpResponseForbidden(_(u'You are not allowed to do this.'))
-    
-    templatedirs = [d for d in list(settings.TEMPLATE_DIRS) + \
-                    list(app_template_dirs) if os.path.isdir(d)]
 
     template_dict = []
     for templatedir in TEMPLATESADMIN_TEMPLATE_DIRS:
@@ -131,8 +127,6 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
     if not any([template_path.startswith(templatedir) for templatedir in TEMPLATESADMIN_TEMPLATE_DIRS]):
         request.user.message_set.create(message=_('Sorry, that file is not available for editing'))
         return HttpResponseRedirect(reverse('templatesadmin-overview'))
-
-    # TODO: check if file is writeable
 
     if request.method == 'POST':
         formclass = TemplateForm

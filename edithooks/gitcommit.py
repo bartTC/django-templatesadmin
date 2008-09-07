@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from templatesadmin import TemplatesAdminException
-from . import TemplatesAdminHook
+from templatesadmin.edithooks import TemplatesAdminHook
 
 import subprocess
 import os
@@ -49,7 +49,7 @@ class GitCommitHook(TemplatesAdminHook):
             stdout_value = proc.stdout.read()
             status = proc.wait()
         finally:
-	    proc.stderr.close()
+            proc.stderr.close()
 
         if status != 0:
             raise TemplatesAdminException("Error while executing %s: %s" % (command, stderr_value.rstrip(), ))
