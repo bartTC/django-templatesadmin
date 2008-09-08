@@ -88,10 +88,10 @@ def user_in_templatesadmin_group(request):
         return True
     except ObjectDoesNotExist:
         return False
-    
+
 @login_required()
 def overview(request, template_name='templatesadmin/overview.html'):
-    
+
     if not user_in_templatesadmin_group(request):
         return HttpResponseForbidden(_(u'You are not allowed to do this.'))
 
@@ -108,9 +108,7 @@ def overview(request, template_name='templatesadmin/overview.html'):
                      'created': datetime.fromtimestamp(os.stat(full_path)[ST_CTIME]),
                      'writeable': os.access(full_path, os.W_OK)
                 }
-                
-                print request.GET.get('hidereadonly')
-                
+
                 # Do not fetch non-writeable templates if settings set.
                 if (TEMPLATESADMIN_HIDE_READONLY == True and \
                     l['writeable'] == True) or \
@@ -124,17 +122,17 @@ def overview(request, template_name='templatesadmin/overview.html'):
         'messages': request.user.get_and_delete_messages(),
         'template_dict': template_dict,
         'ADMIN_MEDIA_PREFIX': settings.ADMIN_MEDIA_PREFIX,
-    }        
+    }
 
     return render_to_response(template_name, template_context)
-    
+
 
 @login_required()
 def edit(request, path, template_name='templatesadmin/edit.html'):
 
     if not user_in_templatesadmin_group(request):
         return HttpResponseForbidden(_(u'You are not allowed to do this.'))
-    
+
     template_path = os.path.join(COMMONPREFIX, path)
 
     # Check if file is within template-dirs
@@ -150,7 +148,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
         form = formclass(request.POST)
         if form.is_valid():
             content = form.cleaned_data['content']
-            
+
             try:
                 for hook in TEMPLATESADMIN_EDITHOOKS:
                     pre_save_notice = hook.pre_save(request, form, template_path)
@@ -159,7 +157,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
             except TemplatesAdminException, e:
                 request.user.message_set.create(message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())
-            
+
             # Save the template
             try:
                 f = open(template_path, 'r')
@@ -185,7 +183,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
             except TemplatesAdminException, e:
                 request.user.message_set.create(message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())
-            
+
             request.user.message_set.create(
                 message=_(u'Template \'%s\' was saved successfully' % path)
             )
@@ -200,7 +198,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
         form = formclass(
             initial={'content': template_file}
         )
-    
+
     template_context = {
         'messages': request.user.get_and_delete_messages(),
         'form': form,
@@ -208,6 +206,6 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
         'template_path': path,
         'template_writeable': os.access(template_path, os.W_OK),
         'ADMIN_MEDIA_PREFIX': settings.ADMIN_MEDIA_PREFIX,
-    }        
+    }
 
     return render_to_response(template_name, template_context)
