@@ -1,6 +1,4 @@
 {% extends "templatesadmin/base.html" %}
-
-{% load templatesadmin_tags %}
 {% load i18n %}
 
 {% block breadcumbs %}<a href="{% url templatesadmin-overview %}">{% trans "Home" %}</a> &rsaquo; {% trans "File selection" %}{% endblock %}
@@ -26,7 +24,7 @@
                 <tr class="{% cycle row1,row2 %}">
                     <td style="width: 99%;">
 						{% if not template.writeable %}{% trans "(read only)" %} {% endif %}
-						<a href="{% url templatesadmin-edit template.abspath|base64urlencode %}">{{ template.abspath }}</a></td>
+						<a href="{% url templatesadmin-edit template.abspath %}">{{ template.abspath }}</a></td>
                     <td style="white-space: nowrap;" class="r">{{ template.modified|date:_("DATETIME_FORMAT") }}</td>
                 </tr>
 	{% endfor %}
