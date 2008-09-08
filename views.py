@@ -17,6 +17,7 @@ from django.core.exceptions import ImproperlyConfigured
 from templatesadmin.forms import TemplateForm
 from templatesadmin import TemplatesAdminException
 
+# Default settings that may be overriden by global settings (settings.py)
 TEMPLATESADMIN_VALID_FILE_EXTENSIONS = getattr(
     settings,
     'TEMPLATESADMIN_VALID_FILE_EXTENSIONS',
@@ -33,6 +34,12 @@ TEMPLATESADMIN_EDITHOOKS = getattr(
     settings,
     'TEMPLATESADMIN_EDITHOOKS',
     ('templatesadmin.edithooks.dotbackupfiles.DotBackupFilesHook', )
+)
+
+TEMPLATESADMIN_HIDE_READONLY = getattr(
+    settings,
+    'TEMPLATESADMIN_HIDE_READONLY',
+    False
 )
 
 if str == type(TEMPLATESADMIN_EDITHOOKS):
@@ -100,11 +107,18 @@ def overview(request, template_name='templatesadmin/overview.html'):
                      'modified': datetime.fromtimestamp(os.stat(full_path)[ST_MTIME]),
                      'created': datetime.fromtimestamp(os.stat(full_path)[ST_CTIME]),
                      'writeable': os.access(full_path, os.W_OK)
-                }                
-                try:
-                    template_dict += (l,)
-                except KeyError:
-                    template_dict = (l,)
+                }
+                
+                print request.GET.get('hidereadonly')
+                
+                # Do not fetch non-writeable templates if settings set.
+                if (TEMPLATESADMIN_HIDE_READONLY == True and \
+                    l['writeable'] == True) or \
+                   TEMPLATESADMIN_HIDE_READONLY == False:
+                    try:
+                        template_dict += (l,)
+                    except KeyError:
+                        template_dict = (l,)
 
     template_context = {
         'messages': request.user.get_and_delete_messages(),
