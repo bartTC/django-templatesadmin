@@ -57,7 +57,12 @@ There are some settings that you can override in your ``settings.py``:
 
    Default: All user-defined and application template-dirs.
 
-4. ``TEMPLATESADMIN_EDITHOOKS``: A tuple of callables edithooks. Edithooks are
+4. ``TEMPLATESADMIN_HIDE_READONLY``: A boolean to wether enable or disable
+   displaying of read-only templates.
+   
+   Default: ``False``
+
+5. ``TEMPLATESADMIN_EDITHOOKS``: A tuple of callables edithooks. Edithooks are
    a way to interact with changes made on a template. Think of a plugin system.
 
    There are two builtin edithooks:
