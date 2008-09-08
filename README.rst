@@ -24,7 +24,7 @@ Installation:
    Just call it ``TemplateAdmins``.
    
    Keep in mind that also Superusers (*is_admin* flag) must belong to this group, if
-   they should been able to edit templates.
+   they should been able to edit templates. The group name is case-sensitive!
    
 4. Point your webbrowser to ``http://localhost/templatesadmin/`` and start 
    editing.
@@ -42,23 +42,48 @@ There are some settings that you can override in your ``settings.py``:
 2. ``TEMPLATESADMIN_VALID_FILE_EXTENSIONS``: A tuple of file-extensions (without
    the leading dot) that are editable by TemplatesAdmin.
    
-   Default: ('html', 'htm', 'txt', 'css', 'backup')
+   Default::
+   
+    TEMPLATESADMIN_VALID_FILE_EXTENSIONS = (
+        'html', 
+        'htm', 
+        'txt', 
+        'css', 
+        'backup'
+    )
 
 3. ``TEMPLATESADMIN_TEMPLATE_DIRS``: A tuple of directories you want your users
    to edit, instead of all templates.
 
-4. ``TEMPLATESADMIN_EDITHOOKS``: Subset of
-   ``( 'templatesadmin.edithooks.dotbackupfiles.DotBackupFilesHook', 'templatesadmin.edithooks.gitcommit.GitCommitHook',)``
-   While the first backups the template to ``.backup``, the second integrates
-   with a git repository, if the templates appear to be in one. You can also
-   implement your own edithooks (look at ``templatesadmin.edithooks.TemplatesAdminHook``)
+   Default: All user-defined and application template-dirs.
 
+4. ``TEMPLATESADMIN_EDITHOOKS``: A tuple of callables edithooks. Edithooks are
+   a way to interact with changes made on a template. Think of a plugin system.
+
+   There are two builtin edithooks:
+   
+   - ``dotbackupfiles.DotBackupFilesHook``: Creates a copy of the original file
+     before overwriting, naming it ``<oldname>.backup``.
+   - ``gitcommit.GitCommitHook``: Commits your templates after saving via git
+     version control.
+
+   You can define your own edithooks, see above hooks as example. 
+   
+   Default::
+   
+    TEMPLATESADMIN_EDITHOOKS = (    
+        'templatesadmin.edithooks.dotbackupfiles.DotBackupFilesHook',
+    )
+   
 Dependencies:
 =============
 
 There are no external dependencies required for this app. Even if it looks like
-django-admin, it just needs it Stylesheets. You have to enable ``django.contrib.auth``
-and ``django.contrib.sessions`` in your ``INSTALLED_APPS`` settings.
+django-admin, it just needs it Stylesheets. So make sure you have set the
+``settings.ADMIN_MEDIA_PREFIX`` url.
+
+You have to enable ``django.contrib.auth`` and ``django.contrib.sessions`` in your
+``INSTALLED_APPS`` settings.
 
 LICENSE:
 ========
