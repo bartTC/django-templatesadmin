@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="{{ADMIN_MEDIA_PREFIX}}css/forms.css" type="text/css"/>
+    <link rel="stylesheet" href="{{ADMIN_MEDIA_PREFIX}}css/changelists.css" type="text/css"/>	
+	<style type="text/css" media="screen">
+		{% block extrastyle %}{% endblock %}	
+	</style>
+	<title>Templates Admin</title>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <div id="branding">
+                <h1 id="site-name"><a href="">Templates Admin</a> </h1>
+            </div>
+        </div>
+		
+        <div class="breadcrumbs">{% block breadcumbs %}{% endblock %}</div>
+		
+		{% if messages %}
+        	<ul class="messagelist">{% for message in messages %}<li>{{ message|escape }}</li>{% endfor %}</ul>
+        {% endif %}
+		
+        <div id="content" class="flex">
+            {% block main %}{% endblock %}
+        </div>
+		
+        <div id="footer" class="breadcumbs">
+        	<hr/>
+     		<p style="margin: 0.5em; 0; font-size: 0.9em;">
+     			<a href="http://code.google.com/p/django-templatesadmin/">
+     			Django Templatesadmin
+				</a> on Google Code
+			</p>
+        </div>
+    </div>
+</body>
+</html>
