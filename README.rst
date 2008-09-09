@@ -93,4 +93,5 @@ You have to enable ``django.contrib.auth`` and ``django.contrib.sessions`` in yo
 LICENSE:
 ========
 
-This application is licensed under the ``New BSD License``.
+This application is licensed under the ``Beerware License``.
+See ``LICENSE`` for details.
