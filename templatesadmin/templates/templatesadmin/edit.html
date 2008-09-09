@@ -20,12 +20,12 @@
 			        <p class="float-left">
 			        	{{ field.label }} {{ field }}
 			        </p>
-	                        {% if forloop.last %} <input type="submit" value="{% trans "Sichern" %}" class="default" /> {% endif %}
+	                        {% if forloop.last %} <input type="submit" value="{% trans "Save" %}" class="default" /> {% endif %}
 			        <br clear="both"/>
 	                    {% endifnotequal %}
 	                {% endfor %}
 		{% else %}
-			{% trans "This template is <strong>not writeable</strong>" %}
+			{% trans "This template is not writeable." %}
 			<br clear="both"/>
 		{% endif %}
 		</div>
