@@ -171,7 +171,10 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
                 f.close()
             except IOError, e:
                 request.user.message_set.create(
-                    message=_(u'Template \'%s\' has not been saved! Reason: %s' % (template_path, path, e))
+                    message=_(u'Template "%(path)s" has not been saved! Reason: %(errormsg)s' % {
+                        'path': path,
+                        'errormsg': e
+                    })
                 )
                 return HttpResponseRedirect(request.build_absolute_uri())
 
@@ -185,7 +188,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
                 return HttpResponseRedirect(request.build_absolute_uri())
 
             request.user.message_set.create(
-                message=_(u'Template \'%s\' was saved successfully' % path)
+                message=_(u'Template "%s" was saved successfully' % path)
             )
             return HttpResponseRedirect(reverse('templatesadmin-overview'))
     else:
