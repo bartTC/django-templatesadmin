@@ -82,7 +82,6 @@ def _shorten_path(path):
     return path[len(COMMONPREFIX)+1:]
 
 def user_in_templatesadmin_group(request):
-    return True
     try:
         request.user.groups.get(name=TEMPLATESADMIN_GROUP)
         return True
