@@ -27,7 +27,7 @@ class GitCommitHook(TemplatesAdminHook):
             'GIT_AUTHOR_NAME="%(author)s" GIT_AUTHOR_EMAIL="%(email)s" '
             'git commit -F - -- %(file)s'
         ) % {
-          'file': file,
+          'file': template_path,
           'author': author,
           'email': request.user.email,
         }
