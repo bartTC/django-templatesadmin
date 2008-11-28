@@ -160,13 +160,23 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
             # Save the template
             try:
                 f = open(template_path, 'r')
-                if None == search("\r\n", f.read()):
-                    # Template is saved in unix-style, save in unix style.
-                    content = content.replace("\r\n", "\n")
+                file_content = f.read()
                 f.close()
 
+		# browser tend to strip newlines from <textarea/>s before
+		# HTTP-POSTing: re-insert them if neccessary
+
+                # content is in dos-style lineending, will be converted in next step
+                if (file_content[-1] == '\n' or file_content[:-2] == '\r\n') \
+                   and content[:-2] != '\r\n':
+                    content = u"%s\r\n" % content
+
+                # Template is saved in unix-style, save in unix style.
+                if None == search("\r\n", file_content):
+                    content = content.replace("\r\n", "\n")
+
                 f = codecs.open(template_path, 'w', 'utf-8')
-                f.write(content[:-1]) # strip \n at end of file
+                f.write(content)
                 f.close()
             except IOError, e:
                 request.user.message_set.create(
