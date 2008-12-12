@@ -17,7 +17,7 @@ Installation:
 
 2. Add this line to your urlconf::
     
-    (r'^templatesadmin/',include('templatesadmin.urls')),
+    (r'^templatesadmin/', include('templatesadmin.urls')),
 
 3. Create a group ``TemplateAdmins`` and put all users in there, who should been
    able to edit templates. You don't need to grant any permissions to that group.
@@ -107,6 +107,3 @@ Changelog:
 
 .. _Issue3: http://code.google.com/p/django-templatesadmin/issues/detail?id=3
 .. _Issue4: http://code.google.com/p/django-templatesadmin/issues/detail?id=4
- 
-  
-  
