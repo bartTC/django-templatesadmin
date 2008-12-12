@@ -95,3 +95,18 @@ LICENSE:
 
 This application is licensed under the ``Beerware License``.
 See ``LICENSE`` for details.
+
+Changelog:
+==========
+
+**v0.5.2 (2008-12-12)**
+
+* Added a edithook for dealing with mercurial repositories. Thank you v.oostveen! (Issue3_)
+* Fixed handling of newline characters at the end of the file, which causes to 
+  delete the last character. (Issue4_)
+
+.. _Issue3: http://code.google.com/p/django-templatesadmin/issues/detail?id=3
+.. _Issue4: http://code.google.com/p/django-templatesadmin/issues/detail?id=4
+ 
+  
+  
