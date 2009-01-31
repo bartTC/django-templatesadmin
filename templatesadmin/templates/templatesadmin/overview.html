@@ -1,5 +1,6 @@
 {% extends "templatesadmin/base.html" %}
 {% load i18n %}
+{% load templatesadmin_tags %}
 
 {% block breadcumbs %}<a href="{% url templatesadmin-overview %}">{% trans "Home" %}</a> &rsaquo; {% trans "File selection" %}{% endblock %}
 {% block main %}
@@ -25,7 +26,7 @@
                 <tr class="{% cycle row1,row2 %}">
                     <td style="width: 99%;">
 						{% if not template.writeable %}{% trans "(read only)" %} {% endif %}
-						<a href="{% url templatesadmin-edit template.abspath %}">{{ template.abspath }}</a></td>
+						<a href="{% url templatesadmin-edit template.abspath %}">{{ template.abspath|shortenfilepath }}</a></td>
                     <td style="white-space: nowrap;" class="r">{{ template.modified|date:_("DATETIME_FORMAT") }}</td>
                 </tr>
 	{% endfor %}

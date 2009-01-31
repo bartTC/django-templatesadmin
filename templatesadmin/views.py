@@ -76,11 +76,6 @@ TEMPLATESADMIN_TEMPLATE_DIRS = getattr(
 
 TEMPLATESADMIN_TEMPLATE_DIRS = [_fixpath(dir) for dir in TEMPLATESADMIN_TEMPLATE_DIRS]
 
-COMMONPREFIX = '/'.join(os.path.commonprefix(TEMPLATESADMIN_TEMPLATE_DIRS).split("/")[:-1])
-
-def _shorten_path(path):
-    return path[len(COMMONPREFIX)+1:]
-
 def user_in_templatesadmin_group(request):
     try:
         request.user.groups.get(name=TEMPLATESADMIN_GROUP)
@@ -92,7 +87,7 @@ def user_in_templatesadmin_group(request):
 def overview(request, template_name='templatesadmin/overview.html'):
 
     if not user_in_templatesadmin_group(request):
-        return HttpResponseForbidden(_(u'You are not allowed to do this.'))
+        return HttpResponseForbidden(_('You are not allowed to do this.'))
 
     template_dict = []
     for templatedir in TEMPLATESADMIN_TEMPLATE_DIRS:
@@ -101,8 +96,8 @@ def overview(request, template_name='templatesadmin/overview.html'):
                       in TEMPLATESADMIN_VALID_FILE_EXTENSIONS]):
                 full_path = os.path.join(root, f)
                 l = {
-                     'rootpath': _shorten_path(root),
-                     'abspath': _shorten_path(full_path),
+                     'rootpath': root,
+                     'abspath': full_path,
                      'modified': datetime.fromtimestamp(os.stat(full_path)[ST_MTIME]),
                      'created': datetime.fromtimestamp(os.stat(full_path)[ST_CTIME]),
                      'writeable': os.access(full_path, os.W_OK)
@@ -130,9 +125,9 @@ def overview(request, template_name='templatesadmin/overview.html'):
 def edit(request, path, template_name='templatesadmin/edit.html'):
 
     if not user_in_templatesadmin_group(request):
-        return HttpResponseForbidden(_(u'You are not allowed to do this.'))
+        return HttpResponseForbidden(_('You are not allowed to do this.'))
 
-    template_path = os.path.join(COMMONPREFIX, path)
+    template_path = path
 
     # Check if file is within template-dirs
     if not any([template_path.startswith(templatedir) for templatedir in TEMPLATESADMIN_TEMPLATE_DIRS]):
@@ -180,7 +175,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
                 f.close()
             except IOError, e:
                 request.user.message_set.create(
-                    message=_(u'Template "%(path)s" has not been saved! Reason: %(errormsg)s' % {
+                    message=_('Template "%(path)s" has not been saved! Reason: %(errormsg)s' % {
                         'path': path,
                         'errormsg': e
                     })
@@ -197,7 +192,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
                 return HttpResponseRedirect(request.build_absolute_uri())
 
             request.user.message_set.create(
-                message=_(u'Template "%s" was saved successfully' % path)
+                message=_('Template "%s" was saved successfully' % path)
             )
             return HttpResponseRedirect(reverse('templatesadmin-overview'))
     else:

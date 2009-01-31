@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-09 13:36+0200\n"
+"POT-Creation-Date: 2009-01-31 10:46+0100\n"
 "PO-Revision-Date: 2008-09-09 13:40+0100\n"
 "Last-Translator: Martin Mahner <martin@mahner.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,21 +15,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: views.py:96
-#: views.py:134
+#: views.py:90 views.py:128
 msgid "You are not allowed to do this."
 msgstr "Es ist dir nicht erlaubt, dies zu tun."
 
-#: views.py:140
+#: views.py:134
 msgid "Sorry, that file is not available for editing"
 msgstr "Entschuldigung, diese Datei darf nicht bearbeitet werden."
 
-#: views.py:174
+#: views.py:178
 #, python-format
 msgid "Template \"%(path)s\" has not been saved! Reason: %(errormsg)s"
-msgstr "Template \"%(path)s\" konnte nicht gespeichert werden! Grund: %(errormsg)s"
+msgstr ""
+"Template \"%(path)s\" konnte nicht gespeichert werden! Grund: %(errormsg)s"
 
-#: views.py:191
+#: views.py:195
 #, python-format
 msgid "Template \"%s\" was saved successfully"
 msgstr "Template \"%s\" wurde erfolgreich gespeichert"
@@ -37,13 +37,15 @@ msgstr "Template \"%s\" wurde erfolgreich gespeichert"
 #: edithooks/dotbackupfiles.py:25
 #, python-format
 msgid "Backup Template \"%(path)s\" has not been saved! Reason: %(errormsg)s"
-msgstr "Backup Template \"%(path)s\" konnte nicht gespeichert werden! Grund: %(errormsg)s"
+msgstr ""
+"Backup Template \"%(path)s\" konnte nicht gespeichert werden! Grund: %"
+"(errormsg)s"
 
 #: edithooks/dotbackupfiles.py:36
 msgid "Backup file before saving?"
 msgstr "Backup der Datei vor dem Speichern anlegen?"
 
-#: edithooks/gitcommit.py:63
+#: edithooks/gitcommit.py:63 edithooks/hgcommit.py:49
 msgid "Change message"
 msgstr "Änderungsnachricht"
 
@@ -65,19 +67,18 @@ msgstr "Speichern"
 msgid "This template is not writeable."
 msgstr "Dieses Template ist nicht beschreibbar."
 
-#: templates/templatesadmin/overview.html:18
+#: templates/templatesadmin/overview.html:19
 msgid "File"
 msgstr "Datei"
 
-#: templates/templatesadmin/overview.html:19
+#: templates/templatesadmin/overview.html:20
 msgid "Modified"
 msgstr "Geändert"
 
-#: templates/templatesadmin/overview.html:26
+#: templates/templatesadmin/overview.html:27
 msgid "(read only)"
 msgstr "(nur lesbar)"
 
-#: templates/templatesadmin/overview.html:28
+#: templates/templatesadmin/overview.html:29
 msgid "DATETIME_FORMAT"
 msgstr ""
-
