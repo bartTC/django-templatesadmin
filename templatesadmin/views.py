@@ -122,7 +122,7 @@ def overview(request, template_name='templatesadmin/overview.html'):
 
 
 @login_required()
-def edit(request, path, template_name='templatesadmin/edit.html'):
+def edit(request, path, template_name='templatesadmin/edit.html', base_form=TemplateForm):
 
     if not user_in_templatesadmin_group(request):
         return HttpResponseForbidden(_('You are not allowed to do this.'))
@@ -135,7 +135,7 @@ def edit(request, path, template_name='templatesadmin/edit.html'):
         return HttpResponseRedirect(reverse('templatesadmin-overview'))
 
     if request.method == 'POST':
-        formclass = TemplateForm
+        formclass = base_form
         for hook in TEMPLATESADMIN_EDITHOOKS:
             formclass.base_fields.update(hook.contribute_to_form())
 
