@@ -99,6 +99,12 @@ See ``LICENSE`` for details.
 Changelog:
 ==========
 
+**v0.5.3 (2009-02-03)**
+
+* Edit-Views now have an optional argument "base_form" to overwrite the default form.
+* Removed shorten-path functions. They didn't work under some conditions.
+* List of templates in the admin overview are shorter.
+
 **v0.5.2 (2008-12-12)**
 
 * Added a edithook for dealing with mercurial repositories. Thank you v.oostveen! (Issue3_)
