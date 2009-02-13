@@ -43,7 +43,7 @@ class GitCommitHook(TemplatesAdminHook):
         )
 
         try:
-            proc.stdin.write(message)
+            proc.stdin.write(message.encode('utf-8'))
             proc.stdin.close()
             stderr_value = proc.stderr.read()
             stdout_value = proc.stdout.read()
