@@ -101,6 +101,11 @@ See ``LICENSE`` for details.
 Changelog:
 ==========
 
+**v0.5.5 (2009-02-13)**
+
+* Documented that there is a edithook for mercurial repositories.
+* Bugfix in GitCommitHook: Allow non-ascii characters.
+
 **v0.5.4 (2009-02-13)**
 
 * Fixed missing templatetags in pypi release.
