@@ -71,6 +71,8 @@ There are some settings that you can override in your ``settings.py``:
      before overwriting, naming it ``<oldname>.backup``.
    - ``gitcommit.GitCommitHook``: Commits your templates after saving via git
      version control.
+   - ``hgcommit.HgCommitHook``: Creates a `mercurial
+     <http://www.selenic.com/mercurial/>`_ commit after saving.
 
    You can define your own edithooks, see above hooks as example. 
    
