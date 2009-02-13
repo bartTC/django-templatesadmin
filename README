@@ -99,6 +99,10 @@ See ``LICENSE`` for details.
 Changelog:
 ==========
 
+**v0.5.4 (2009-02-13)**
+
+* Fixed missing templatetags in pypi release.
+
 **v0.5.3 (2009-02-03)**
 
 * Edit-Views now have an optional argument "base_form" to overwrite the default form.
