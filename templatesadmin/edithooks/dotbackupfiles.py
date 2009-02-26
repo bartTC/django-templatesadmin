@@ -31,7 +31,7 @@ class DotBackupFilesHook(TemplatesAdminHook):
         return "Backup \'%s.backup\' has been saved." % template_path
 
     @classmethod
-    def contribute_to_form(cls):
+    def contribute_to_form(cls, template_path):
         return dict(backup=forms.BooleanField(
             label = _('Backup file before saving?'),
             required = False,

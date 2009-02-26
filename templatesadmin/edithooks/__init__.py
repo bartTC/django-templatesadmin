@@ -14,6 +14,6 @@ class TemplatesAdminHook(object):
         pass
 
     @classmethod
-    def contribute_to_form(cls, form):
+    def contribute_to_form(cls, form, template_path):
         return form
 

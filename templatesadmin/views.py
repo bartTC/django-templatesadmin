@@ -137,7 +137,7 @@ def edit(request, path, template_name='templatesadmin/edit.html', base_form=Temp
     if request.method == 'POST':
         formclass = base_form
         for hook in TEMPLATESADMIN_EDITHOOKS:
-            formclass.base_fields.update(hook.contribute_to_form())
+            formclass.base_fields.update(hook.contribute_to_form(template_path))
 
         form = formclass(request.POST)
         if form.is_valid():
@@ -200,7 +200,7 @@ def edit(request, path, template_name='templatesadmin/edit.html', base_form=Temp
 
         formclass = TemplateForm
         for hook in TEMPLATESADMIN_EDITHOOKS:
-            formclass.base_fields.update(hook.contribute_to_form())
+            formclass.base_fields.update(hook.contribute_to_form(template_path))
 
         form = formclass(
             initial={'content': template_file}
