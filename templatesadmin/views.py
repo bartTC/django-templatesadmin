@@ -85,7 +85,7 @@ def user_in_templatesadmin_group(user):
 
 @user_passes_test(lambda u: user_in_templatesadmin_group(u))
 @login_required
-def overview(request,
+def listing(request,
              template_name='templatesadmin/overview.html',
              available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
 
@@ -120,13 +120,11 @@ def overview(request,
 
     return render_to_response(template_name, template_context)
 
-@user_passes_test(lambda u: user_in_templatesadmin_group(u))
-@login_required
-def edit(request,
-         path,
-         template_name='templatesadmin/edit.html',
-         base_form=TemplateForm,
-         available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
+def modify(request,
+           path,
+           template_name='templatesadmin/edit.html',
+           base_form=TemplateForm,
+           available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
 
     template_path = path
 
@@ -217,3 +215,7 @@ def edit(request,
     }
 
     return render_to_response(template_name, template_context)
+
+# For backwards compatibility and secure out-of-the-box views
+overview = user_passes_test(lambda u: user_in_templatesadmin_group(u))(login_required(listing))
+edit = user_passes_test(lambda u: user_in_templatesadmin_group(u))(login_required(modify))
