@@ -85,10 +85,10 @@ def user_in_templatesadmin_group(user):
 
 @user_passes_test(lambda u: user_in_templatesadmin_group(u))
 @login_required
-def overview(request, template_name='templatesadmin/overview.html'):
+def overview(request, template_name='templatesadmin/overview.html', available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
 
     template_dict = []
-    for templatedir in TEMPLATESADMIN_TEMPLATE_DIRS:
+    for templatedir in available_template_dirs:
         for root, dirs, files in os.walk(templatedir):
             for f in sorted([f for f in files if f.rsplit('.')[-1] \
                       in TEMPLATESADMIN_VALID_FILE_EXTENSIONS]):
@@ -120,12 +120,12 @@ def overview(request, template_name='templatesadmin/overview.html'):
 
 @user_passes_test(lambda u: user_in_templatesadmin_group(u))
 @login_required
-def edit(request, path, template_name='templatesadmin/edit.html', base_form=TemplateForm):
+def edit(request, path, template_name='templatesadmin/edit.html', base_form=TemplateForm, available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
 
     template_path = path
 
     # Check if file is within template-dirs
-    if not any([template_path.startswith(templatedir) for templatedir in TEMPLATESADMIN_TEMPLATE_DIRS]):
+    if not any([template_path.startswith(templatedir) for templatedir in available_template_dirs]):
         request.user.message_set.create(message=_('Sorry, that file is not available for editing'))
         return HttpResponseRedirect(reverse('templatesadmin-overview'))
 
