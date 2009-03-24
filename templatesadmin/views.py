@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template.loaders.app_directories import app_template_dirs
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ImproperlyConfigured
 
 from templatesadmin.forms import TemplateForm
@@ -76,18 +76,16 @@ TEMPLATESADMIN_TEMPLATE_DIRS = getattr(
 
 TEMPLATESADMIN_TEMPLATE_DIRS = [_fixpath(dir) for dir in TEMPLATESADMIN_TEMPLATE_DIRS]
 
-def user_in_templatesadmin_group(request):
+def user_in_templatesadmin_group(user):
     try:
-        request.user.groups.get(name=TEMPLATESADMIN_GROUP)
+        user.groups.get(name=TEMPLATESADMIN_GROUP)
         return True
     except ObjectDoesNotExist:
         return False
 
-@login_required()
+@user_passes_test(lambda u: user_in_templatesadmin_group(u))
+@login_required
 def overview(request, template_name='templatesadmin/overview.html'):
-
-    if not user_in_templatesadmin_group(request):
-        return HttpResponseForbidden(_('You are not allowed to do this.'))
 
     template_dict = []
     for templatedir in TEMPLATESADMIN_TEMPLATE_DIRS:
@@ -120,12 +118,9 @@ def overview(request, template_name='templatesadmin/overview.html'):
 
     return render_to_response(template_name, template_context)
 
-
-@login_required()
+@user_passes_test(lambda u: user_in_templatesadmin_group(u))
+@login_required
 def edit(request, path, template_name='templatesadmin/edit.html', base_form=TemplateForm):
-
-    if not user_in_templatesadmin_group(request):
-        return HttpResponseForbidden(_('You are not allowed to do this.'))
 
     template_path = path
 
