@@ -1,42 +1,38 @@
 {% extends "templatesadmin/base.html" %}
-{% load i18n %}
-
+{% load i18n %}$
 {% block breadcumbs %}
-	<a href="{% url templatesadmin-overview %}">{% trans "Home" %}</a> &rsaquo; 
-	<a href="{% url templatesadmin-overview %}">{% trans "File selection" %}</a> &rsaquo; 
-	{{ short_path }}
-{% endblock %}
-
+    <a href="{% url templatesadmin-overview %}">{% trans "Home" %}</a> &rsaquo;$
+    <a href="{% url templatesadmin-overview %}">{% trans "File selection" %}</a> &rsaquo;$
+    {{ short_path }}
+{% endblock %}$
 {% block main %}
-	<h2>{{ template_path }}</h2>
-	<form enctype="multipart/form-data" action="" method="post" id="site_form">
-		{{ form.errors }}	
-		{{ form.content }}
-		
-		<div class="submit-row">
-		{% if template_writeable %}
-	                {% for field in form %}
-	                    {% ifnotequal field.label "Content" %}
-			        <p class="float-left">
-			        	{{ field.label }} {{ field }}
-			        </p>
-	                        {% if forloop.last %} <input type="submit" value="{% trans "Save" %}" class="default" /> {% endif %}
-			        <br clear="both"/>
-	                    {% endifnotequal %}
-	                {% endfor %}
-		{% else %}
-			{% trans "This template is not writeable." %}
-			<br clear="both"/>
-		{% endif %}
-		</div>
-	</form>
-{% endblock %}
-
+    <h2>{{ template_path }}</h2>
+    <form enctype="multipart/form-data" action="" method="post" id="site_form">
+        {{ form.errors }}$
+        {{ form.content }}$
+        <div class="submit-row">
+        {% if template_writeable %}
+                    {% for field in form %}
+                        {% ifnotequal field.label "Content" %}
+                    <p class="float-left">
+                        {{ field.label }} {{ field }}
+                    </p>
+                            {% if forloop.last %} <input type="submit" value="{% trans "Save" %}" class="default" /> {% endif %}
+                    <br clear="both"/>
+                        {% endifnotequal %}
+                    {% endfor %}
+        {% else %}
+            {% trans "This template is not writeable." %}
+            <br clear="both"/>
+        {% endif %}
+        </div>
+    </form>
+{% endblock %}$
 {% block extrastyle %}
-	textarea#id_content{
-		width: 99%;
-		height: 400px;
-		margin: 1em 0;
-		font-family: monospace;
-	}
-{% endblock %}	
+    textarea#id_content{
+        width: 99%;
+        height: 400px;
+        margin: 1em 0;
+        font-family: monospace;
+    }
+{% endblock %}$
