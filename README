@@ -15,9 +15,9 @@ Installation:
 
 1. Put ``templatesadmin`` into your INSTALLED_APPS setting.
 
-2. Add this line to your urlconf::
+2. Add this line to your urlconf but **before** your admin include::
     
-    (r'^templatesadmin/', include('templatesadmin.urls')),
+    (r'^admin/templatesadmin/', include('templatesadmin.urls')),
 
 3. Create a group ``TemplateAdmins`` and put all users in there, who should been
    able to edit templates. You don't need to grant any permissions to that group.
@@ -26,7 +26,7 @@ Installation:
    Keep in mind that also Superusers (*is_admin* flag) must belong to this group, if
    they should been able to edit templates. The group name is case-sensitive!
    
-4. Point your webbrowser to ``http://localhost/templatesadmin/`` and start 
+4. Point your webbrowser to ``http://localhost/admin/templatesadmin/`` and start 
    editing.
    
 Optional Settings:
@@ -82,15 +82,6 @@ There are some settings that you can override in your ``settings.py``:
         'templatesadmin.edithooks.dotbackupfiles.DotBackupFilesHook',
     )
    
-Dependencies:
-=============
-
-There are no external dependencies required for this app. Even if it looks like
-django-admin, it just needs it Stylesheets. So make sure you have set the
-``settings.ADMIN_MEDIA_PREFIX`` url.
-
-You have to enable ``django.contrib.auth`` and ``django.contrib.sessions`` in your
-``INSTALLED_APPS`` settings.
 
 LICENSE:
 ========
@@ -101,6 +92,14 @@ See ``LICENSE`` for details.
 Changelog:
 ==========
 
+**v0.6 (2009-09-08)**
+
+* Published under a proper BSD license.
+* The templates now inherits from the Django templates to provide a better
+  look and feel.
+* A lot of overall improvements from typo fixing to better permission handling.
+  Thanks to peritus and rlaager.
+  
 **v0.5.5 (2009-02-13)**
 
 * Documented that there is a edithook for mercurial repositories.
