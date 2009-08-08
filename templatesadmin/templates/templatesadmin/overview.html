@@ -1,8 +1,20 @@
 {% extends "templatesadmin/base.html" %}
+
 {% load i18n %}
 {% load templatesadmin_tags %}
-{% block breadcumbs %}<a href="{% url templatesadmin-overview %}">{% trans "Home" %}</a> &rsaquo; {% trans "File selection" %}{% endblock %}
-{% block main %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url templatesadmin-overview %}">{% trans "Home" %}</a> &rsaquo;
+    {% trans "File selection" %}
+</div>
+{% endblock %}
+
+{% block title %}
+    <h1>{% trans "Templatesadmin Overview" %}</h1>
+{% endblock %}T
+
+{% block content %}
     {% for template in template_dict %}
         {% ifchanged template.rootpath %}
         {% if not forloop.first %}
