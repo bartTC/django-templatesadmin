@@ -97,6 +97,7 @@ def listing(request,
                       in TEMPLATESADMIN_VALID_FILE_EXTENSIONS]):
                 full_path = os.path.join(root, f)
                 l = {
++                    'templatedir': templatedir,
                      'rootpath': root,
                      'abspath': full_path,
                      'modified': datetime.fromtimestamp(os.stat(full_path)[ST_MTIME]),
