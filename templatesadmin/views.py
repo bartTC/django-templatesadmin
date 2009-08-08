@@ -13,6 +13,7 @@ from django.template.loaders.app_directories import app_template_dirs
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ImproperlyConfigured
+from django.template import RequestContext
 
 from templatesadmin.forms import TemplateForm
 from templatesadmin import TemplatesAdminException
@@ -118,7 +119,8 @@ def listing(request,
         'ADMIN_MEDIA_PREFIX': settings.ADMIN_MEDIA_PREFIX,
     }
 
-    return render_to_response(template_name, template_context)
+    return render_to_response(template_name, template_context,
+                              RequestContext(request))
 
 def modify(request,
            path,
@@ -214,7 +216,8 @@ def modify(request,
         'ADMIN_MEDIA_PREFIX': settings.ADMIN_MEDIA_PREFIX,
     }
 
-    return render_to_response(template_name, template_context)
+    return render_to_response(template_name, template_context,
+                              RequestContext(request))
 
 # For backwards compatibility and secure out-of-the-box views
 overview = user_passes_test(lambda u: user_in_templatesadmin_group(u))(login_required(listing))
