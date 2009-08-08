@@ -1,38 +1,36 @@
 {% extends "templatesadmin/base.html" %}
-
 {% load i18n %}
-{% load templatesadmin_tags %}$
+{% load templatesadmin_tags %}
 
 {% block breadcumbs %}<a href="{% url templatesadmin-overview %}">{% trans "Home" %}</a> &rsaquo; {% trans "File selection" %}{% endblock %}
-
 {% block main %}
-    {% for template in template_dict %}
-        {% ifchanged template.rootpath %}
-        {% if not forloop.first %}
+	{% for template in template_dict %}
+		{% ifchanged template.rootpath %}
+		{% if not forloop.first %}
             </tbody>
         </table>
         </div>
-        {% endif %}
+		{% endif %}
         <div class="module">
         <a name="{{ template.rootpath }}"></a>
-        <h2>{{ template.rootpath }}</h2>$
+        <h2>{{ template.rootpath }}</h2>		
         <table cellspacing="0" style="width: 100%;">
             <thead>
                 <tr>
                     <th>{% trans "File" %}</th>
-                    <th class="r">{% trans "Modified" %}</th>$
+                    <th class="r">{% trans "Modified" %}</th>        
                 </tr>
             </thead>
             <tbody>
-        {% endifchanged %}
+		{% endifchanged %}
                 <tr class="{% cycle row1,row2 %}">
                     <td style="width: 99%;">
-                        {% if not template.writeable %}{% trans "(read only)" %} {% endif %}
-                        <a href="{% url templatesadmin-edit template.abspath %}">{{ template.abspath|shortenfilepath }}</a></td>
+						{% if not template.writeable %}{% trans "(read only)" %} {% endif %}
+						<a href="{% url templatesadmin-edit template.abspath %}">{{ template.abspath|shortenfilepath }}</a></td>
                     <td style="white-space: nowrap;" class="r">{{ template.modified|date:_("DATETIME_FORMAT") }}</td>
                 </tr>
-    {% endfor %}
+	{% endfor %}
             </tbody>
         </table>
         </div>
-{% endblock %}$
+{% endblock %}
