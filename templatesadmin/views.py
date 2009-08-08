@@ -133,7 +133,7 @@ def modify(request,
 
     # Check if file is within template-dirs
     if not any([template_path.startswith(templatedir) for templatedir in available_template_dirs]):
-        request.user.message_set.create(message=_('Sorry, that file is not available for editing'))
+        request.user.message_set.create(message=_('Sorry, that file is not available for editing.'))
         return HttpResponseRedirect(reverse('templatesadmin-overview'))
 
     if request.method == 'POST':
@@ -194,7 +194,7 @@ def modify(request,
                 return HttpResponseRedirect(request.build_absolute_uri())
 
             request.user.message_set.create(
-                message=_('Template "%s" was saved successfully' % path)
+                message=_('Template "%s" was saved successfully.' % path)
             )
             return HttpResponseRedirect(reverse('templatesadmin-overview'))
     else:
