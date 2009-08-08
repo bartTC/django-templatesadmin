@@ -15,7 +15,7 @@
         textarea#id_content{
             width: 99%;
             height: 400px;
-            margin: 1em 0;
+            margin: 0 0 1em 0;
             font-family: monospace;
         }
     </style>
@@ -29,8 +29,12 @@
 </div>
 {% endblock %}
 
+{% block title %}
+    {% trans "Edit Template:" %} {{ template_path|shortenfilepath }}
+{% endblock %}
+
 {% block content_title %}
-    <h1>{{ template_path|shortenfilepath }}</h1>
+    <h1>{% trans "Edit Template:" %} {{ template_path|shortenfilepath }}</h1>
 {% endblock %}
 
 {% block content %}
