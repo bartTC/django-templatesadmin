@@ -22,7 +22,7 @@ class HgCommitHook(TemplatesAdminHook):
             author = request.user.username
 
         message = form.cleaned_data['commitmessage'] or '--'
-        
+
         path = None
         for template_dir in settings.TEMPLATE_DIRS:
             if dir.startswith(template_dir):
@@ -37,9 +37,9 @@ class HgCommitHook(TemplatesAdminHook):
                 commit_file = commit_file[1:]
         uio = ui.ui(interactive=False, report_untrusted=False, quiet=True)
         repo = hg.repository(uio, path=path)
-        
+
         repo.commit([str(commit_file)], text=message, user="%s <%s>" % (author, request.user.email))
-        
+
         return "Template '%s' was committed succesfully into mercurial repository." % commit_file
 
     @classmethod

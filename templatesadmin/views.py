@@ -160,8 +160,8 @@ def modify(request,
                 file_content = f.read()
                 f.close()
 
-		# browser tend to strip newlines from <textarea/>s before
-		# HTTP-POSTing: re-insert them if neccessary
+                # browser tend to strip newlines from <textarea/>s before
+                # HTTP-POSTing: re-insert them if neccessary
 
                 # content is in dos-style lineending, will be converted in next step
                 if (file_content[-1] == '\n' or file_content[:-2] == '\r\n') \
