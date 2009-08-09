@@ -40,8 +40,10 @@
 {% block content %}
 <div id="content-main">
     <form enctype="multipart/form-data" action="" method="post" id="site_form">
-        {{ form.errors }}
-        {{ form.content }}
+        <div>
+            {{ form.errors }}
+            {{ form.content }}
+        </div>
         <div class="submit-row">
         {% if template_writeable %}
             {% for field in form %}
