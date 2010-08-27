@@ -40,6 +40,7 @@
 {% block content %}
 <div id="content-main">
     <form enctype="multipart/form-data" action="" method="post" id="site_form">
+        {% csrf_token %}
         <div>
             {{ form.errors }}
             {{ form.content }}
