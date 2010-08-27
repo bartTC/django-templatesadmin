@@ -129,7 +129,7 @@ def modify(request,
            base_form=TemplateForm,
            available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
 
-    template_path = path
+    template_path = _fixpath(path)
 
     # Check if file is within template-dirs
     if not any([template_path.startswith(templatedir) for templatedir in available_template_dirs]):
