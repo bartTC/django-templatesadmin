@@ -4,16 +4,17 @@ from datetime import datetime
 from stat import ST_MTIME, ST_CTIME
 from re import search
 
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponseForbidden
-from django.utils.translation import ugettext as _
-from django.shortcuts import render_to_response
 from django.conf import settings
-from django.template.loaders.app_directories import app_template_dirs
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.template.loaders.app_directories import app_template_dirs
+from django.utils.translation import ugettext as _
+from django.views.decorators.cache import never_cache
 
 from templatesadmin.forms import TemplateForm
 from templatesadmin import TemplatesAdminException
@@ -84,6 +85,7 @@ def user_in_templatesadmin_group(user):
     except ObjectDoesNotExist:
         return False
 
+@never_cache
 @user_passes_test(lambda u: user_in_templatesadmin_group(u))
 @login_required
 def listing(request,
@@ -122,7 +124,7 @@ def listing(request,
 
     return render_to_response(template_name, template_context,
                               RequestContext(request))
-
+@never_cache
 def modify(request,
            path,
            template_name='templatesadmin/edit.html',
