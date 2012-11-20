@@ -125,6 +125,8 @@ def listing(request,
     return render_to_response(template_name, template_context,
                               RequestContext(request))
 @never_cache
+@user_passes_test(lambda u: user_in_templatesadmin_group(u))
+@login_required
 def modify(request,
            path,
            template_name='templatesadmin/edit.html',
