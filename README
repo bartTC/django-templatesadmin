@@ -16,39 +16,39 @@ Installation:
 1. Put ``templatesadmin`` into your INSTALLED_APPS setting.
 
 2. Add this line to your urlconf but **before** your admin include::
-    
+
     (r'^admin/templatesadmin/', include('templatesadmin.urls')),
 
 3. Create a group ``TemplateAdmins`` and put all users in there, who should been
    able to edit templates. You don't need to grant any permissions to that group.
    Just call it ``TemplateAdmins``.
-   
+
    Keep in mind that also Superusers (*is_admin* flag) must belong to this group, if
    they should been able to edit templates. The group name is case-sensitive!
-   
-4. Point your webbrowser to ``http://localhost/admin/templatesadmin/`` and start 
+
+4. Point your webbrowser to ``http://localhost/admin/templatesadmin/`` and start
    editing.
-   
+
 Optional Settings:
 ==================
 
 There are some settings that you can override in your ``settings.py``:
 
 1. ``TEMPLATESADMIN_GROUP``: The name of your group of your TemplatesAdmin
-   Users. 
-   
+   Users.
+
    Default: ``TemplateAdmins``
-   
+
 2. ``TEMPLATESADMIN_VALID_FILE_EXTENSIONS``: A tuple of file-extensions (without
    the leading dot) that are editable by TemplatesAdmin.
-   
+
    Default::
-   
+
     TEMPLATESADMIN_VALID_FILE_EXTENSIONS = (
-        'html', 
-        'htm', 
-        'txt', 
-        'css', 
+        'html',
+        'htm',
+        'txt',
+        'css',
         'backup'
     )
 
@@ -59,14 +59,14 @@ There are some settings that you can override in your ``settings.py``:
 
 4. ``TEMPLATESADMIN_HIDE_READONLY``: A boolean to wether enable or disable
    displaying of read-only templates.
-   
+
    Default: ``False``
 
 5. ``TEMPLATESADMIN_EDITHOOKS``: A tuple of callables edithooks. Edithooks are
    a way to interact with changes made on a template. Think of a plugin system.
 
    There are two builtin edithooks:
-   
+
    - ``dotbackupfiles.DotBackupFilesHook``: Creates a copy of the original file
      before overwriting, naming it ``<oldname>.backup``.
    - ``gitcommit.GitCommitHook``: Commits your templates after saving via git
@@ -74,14 +74,14 @@ There are some settings that you can override in your ``settings.py``:
    - ``hgcommit.HgCommitHook``: Creates a `mercurial
      <http://www.selenic.com/mercurial/>`_ commit after saving.
 
-   You can define your own edithooks, see above hooks as example. 
-   
+   You can define your own edithooks, see above hooks as example.
+
    Default::
-   
-    TEMPLATESADMIN_EDITHOOKS = (    
+
+    TEMPLATESADMIN_EDITHOOKS = (
         'templatesadmin.edithooks.dotbackupfiles.DotBackupFilesHook',
     )
-   
+
 
 LICENSE:
 ========
@@ -92,6 +92,10 @@ See ``LICENSE`` for details.
 Changelog:
 ==========
 
+**v0.7 (2012-11-20)**
+
+* Added missing permission check for an Admin view.
+
 **v0.6 (2009-09-08)**
 
 * Published under a proper BSD license.
@@ -99,7 +103,7 @@ Changelog:
   look and feel.
 * A lot of overall improvements from typo fixing to better permission handling.
   Thanks to peritus and rlaager.
-  
+
 **v0.5.5 (2009-02-13)**
 
 * Documented that there is a edithook for mercurial repositories.
@@ -118,7 +122,7 @@ Changelog:
 **v0.5.2 (2008-12-12)**
 
 * Added a edithook for dealing with mercurial repositories. Thank you v.oostveen! (Issue3_)
-* Fixed handling of newline characters at the end of the file, which causes to 
+* Fixed handling of newline characters at the end of the file, which causes to
   delete the last character. (Issue4_)
 
 .. _Issue3: http://code.google.com/p/django-templatesadmin/issues/detail?id=3
