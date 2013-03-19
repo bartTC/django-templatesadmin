@@ -1,3 +1,7 @@
+.. warning:: Not in active development. Probably not functional in latest 
+             Django version. If you like to take over the project please
+             contact me. 
+
 ===============
 Templates Admin
 ===============
